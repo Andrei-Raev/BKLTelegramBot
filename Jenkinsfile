@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script { telegramBot.begin() }
 
-                git branch: 'master', url: 'https://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@github.com/Andrei-Raev/BKLTelegramBot.git'
+                git branch: 'main', url: 'https://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@github.com/Andrei-Raev/BKLTelegramBot.git'
 
                 script { telegramBot.end() }
             }
