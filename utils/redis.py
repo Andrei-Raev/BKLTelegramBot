@@ -5,10 +5,6 @@ PORT = 6379
 redis = StrictRedis(host=HOST, port=PORT, db=0)
 
 
-class UserCache:
-    user_id: int
-
-
 def support_mode(_id: int) -> bool:
     return bool(redis.get(f'sm:{_id}'))
 
