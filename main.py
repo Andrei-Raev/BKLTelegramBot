@@ -1,10 +1,7 @@
 from utils.register_steps import *
 
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'
-TELEGRAM_CHAT_ID = 780828132
 bot = TeleBot(TOKEN)
-
-clear_registrated(TELEGRAM_CHAT_ID)
 
 
 @bot.message_handler(commands=['start'])
