@@ -1,11 +1,11 @@
-import os
-import re, requests
+import re
+import requests
 
-from telebot.types import Message, ReactionTypeEmoji, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from telebot import TeleBot
+from telebot.types import Message, ReactionTypeEmoji, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
-from utils.mesage_template import *
 from utils.database_utils import *
+from utils.mesage_template import *
 from utils.redis import *
 
 
@@ -111,7 +111,6 @@ def confirm_information(message: Message, bot: TeleBot) -> None:
 
 
 def confirm_callback_edit(call: CallbackQuery, bot: TeleBot) -> None:
-    print(call.data)
     if call.data == "confirm:edit:back":
         keyboard = InlineKeyboardMarkup()
         keyboard.row(InlineKeyboardButton(text="✅ Подтвердить", callback_data="confirm:yes"),

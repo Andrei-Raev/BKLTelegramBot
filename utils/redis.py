@@ -13,6 +13,10 @@ def support_mode(_id: int) -> bool:
     return bool(redis.get(f'sm:{_id}'))
 
 
+def get_user_id_by_invoice(invoice: str) -> int:
+    return int(redis.get(f'invoice:{invoice}'))
+
+
 def set_registrated(user_id: int) -> None:
     redis.hset(str(user_id), "registrated", str(1))
 

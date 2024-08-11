@@ -1,4 +1,5 @@
-from utils.register_steps import *
+from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_information, confirm_callback_edit, \
+    EMPTY_INVITE, get_user_id_by_invoice, confirm_information, set_telegram_id_by_user_id, set_policy
 
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'
 bot = TeleBot(TOKEN)
@@ -10,13 +11,18 @@ def start(message):
     if len(args) > 1:
         invoice = args[1].strip()
 
-    else:
-        is_user_exist = add_user_if_not_exist(message.chat.id)
+        user_id = get_user_id_by_invoice(invoice)
+        if user_id is not None:
+            set_telegram_id_by_user_id(user_id, message.chat.id)
+            set_policy(message.chat.id)
+            confirm_information(message, bot)
+            return
 
-        if not is_user_exist:
-            bot.send_message(message.chat.id, EMPTY_INVITE, parse_mode="MarkdownV2")
+    is_user_exist = add_user_if_not_exist(message.chat.id)
+    if not is_user_exist:
+        bot.send_message(message.chat.id, EMPTY_INVITE, parse_mode="MarkdownV2")
 
-        ask_missing_information(message, bot)
+    ask_missing_information(message, bot)
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("confirm:edit:"))
