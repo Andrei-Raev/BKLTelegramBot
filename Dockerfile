@@ -2,7 +2,8 @@ FROM python:3.12-alpine
 
 WORKDIR /bot
 
-RUN apt install python3-dev default-libmysqlclient-dev build-essential -y
+RUN apk update && \
+    apk add --no-cache python3-dev musl-dev gcc libffi-dev \
 
 COPY requirements.txt .
 
