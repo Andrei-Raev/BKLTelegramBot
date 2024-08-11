@@ -17,10 +17,10 @@ def ask_missing_information(message: Message, bot: TeleBot) -> bool:
         return True
 
     if not check_telegram_username(user_id):
-        try:
+        if message.from_user.username is not None:
             add_telegram_username(message.from_user.username, user_id)
-        except Exception as e:
-            print(e)
+        else:
+            add_telegram_username("unnamed", user_id)
         ask_missing_information(message, bot)
         return False
 
