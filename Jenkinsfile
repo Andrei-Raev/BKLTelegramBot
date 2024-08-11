@@ -65,7 +65,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_KEY, keyFileVariable: 'SSH_KEY_PATH')]) {
                         sh """
                         ssh -i ${SSH_KEY_PATH} ${SERVER_USER}@${SERVER_IP} <<EOF
-                            docker rm -f python-telebot-app
+                            docker rm -f new-python-telebot-app
 EOF
                         """
                     }
@@ -89,7 +89,7 @@ EOF
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_KEY, keyFileVariable: 'SSH_KEY_PATH')]) {
                         sh """
                         ssh -i ${SSH_KEY_PATH} ${SERVER_USER}@${SERVER_IP} <<EOF
-                            docker run --name run-python-telebot-app -d python-telebot-app
+                            docker run --name new-python-telebot-app -d python-telebot-app
                             docker image prune -f
 EOF
                         """
