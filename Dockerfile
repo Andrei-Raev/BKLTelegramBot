@@ -2,6 +2,8 @@ FROM python:3.12-alpine
 
 WORKDIR /bot
 
+RUN sudo apt-get install default-libmysqlclient-dev build-essential -y
+
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
