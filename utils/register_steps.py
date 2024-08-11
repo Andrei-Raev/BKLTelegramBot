@@ -16,16 +16,16 @@ def ask_missing_information(message: Message, bot: TeleBot) -> bool:
                          parse_mode="MarkdownV2")
         return True
 
-    if not get_policy(user_id):
-        ask_policy(message, bot)
-        return False
-
     if not check_telegram_username(user_id):
         try:
             add_telegram_username(message.from_user.username, user_id)
         except Exception as e:
             print(e)
         ask_missing_information(message, bot)
+        return False
+
+    if not get_policy(user_id):
+        ask_policy(message, bot)
         return False
 
     if not check_name(user_id):

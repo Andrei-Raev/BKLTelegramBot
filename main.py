@@ -1,7 +1,3 @@
-from telebot import TeleBot
-from telebot.types import ReactionTypeCustomEmoji
-
-from utils.mesage_template import *
 from utils.register_steps import *
 
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'
