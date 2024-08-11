@@ -3,7 +3,7 @@ FROM python:3.12-alpine
 WORKDIR /bot
 
 RUN apk update && \
-    apk add --no-cache python3-dev musl-dev gcc libffi-dev \
+    apk add --no-cache python3-dev musl-dev gcc libffi-dev
 
 COPY requirements.txt .
 
