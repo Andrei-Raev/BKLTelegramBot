@@ -1,0 +1,4 @@
+redis5
+pyTelegramBotAPI>=4.22
+sqlalchemy
+mysqlclient

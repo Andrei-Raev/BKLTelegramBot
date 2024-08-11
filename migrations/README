@@ -1,0 +1,11 @@
+В данной директории находятся миграции alembic. Все миграции должны быть в директории migrations.
+
+Создать миграцию:
+```cmd
+alembic revision --autogenerate -m "description"
+```
+
+Запустить миграцию:
+```cmd
+alembic upgrade head
+```
