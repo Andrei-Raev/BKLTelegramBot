@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-engine = create_engine('mysql://XPEvent:px9TWv5uQI&2@copenakum.beget.app:3306/XPEvent', pool_pre_ping=True,
+engine = create_engine('mysql+pymysql://XPEvent:px9TWv5uQI&2@copenakum.beget.app:3306/XPEvent', pool_pre_ping=True,
                        pool_recycle=3600)
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
