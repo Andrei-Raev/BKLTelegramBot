@@ -69,6 +69,7 @@ pipeline {
 EOF
                         """
                     }
+                }
 
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: env.SSH_KEY, keyFileVariable: 'SSH_KEY_PATH')]) {
