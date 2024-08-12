@@ -15,7 +15,7 @@ def start(message):
         if user_id is not None:
             set_telegram_id_by_user_id(user_id, message.chat.id)
             set_policy(message.chat.id)
-            confirm_information(message, bot)
+            ask_missing_information(message, bot)
             return
 
     is_user_exist = add_user_if_not_exist(message.chat.id)

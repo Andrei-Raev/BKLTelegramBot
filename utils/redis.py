@@ -10,7 +10,9 @@ def support_mode(_id: int) -> bool:
 
 
 def get_user_id_by_invoice(invoice: str) -> int:
-    return int(redis.get(f'invoice:{invoice}'))
+    user_id = int(redis.get(f'invoice:{invoice}'))
+    # redis.delete(f'invoice:{invoice}')
+    return user_id
 
 
 def set_registrated(user_id: int) -> None:
