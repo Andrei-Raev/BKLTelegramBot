@@ -11,7 +11,7 @@ def support_mode(_id: int) -> bool:
 
 def get_user_id_by_invoice(invoice: str) -> int:
     user_id = int(redis.get(f'invoice:{invoice}'))
-    # redis.delete(f'invoice:{invoice}')
+    redis.delete(f'invoice:{invoice}')
     return user_id
 
 
@@ -24,7 +24,7 @@ def is_registrated(user_id: int) -> bool:
 
 
 def clear_registrated(user_id: int) -> None:
-    redis.hdel(str(user_id), "registrated")
+    redis.hdel(str(user_id), ["registrated"]) # TODO проверить
 
 
 def set_policy(user_id: int) -> None:
@@ -36,7 +36,7 @@ def get_policy(user_id: int) -> bool:
 
 
 def clear_policy(user_id: int) -> None:
-    redis.hdel(str(user_id), "policy")
+    redis.hdel(str(user_id), ["policy"])
 
 
 def get_temp_ea_cookie() -> str:

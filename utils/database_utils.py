@@ -32,8 +32,8 @@ def get_platform_by_id(platform_id: int) -> PlatformORM:
         return platform
 
 
-def template_database_setter(data: str, user_id: int) -> None:
-    ...
+"""def template_database_setter(data: str, user_id: int) -> None:
+    ..."""
 
 
 def add_user_name(data: str, user_id: int) -> None:
@@ -72,8 +72,8 @@ def add_telegram_username(data: str, user_id: int) -> None:
 
 
 # --== {ЧЕКЕРЫ} ==--
-def checker(user_id: int) -> bool:
-    ...
+"""def checker(user_id: int) -> bool:
+    ..."""
 
 
 def check_user_exist(user_id: int) -> bool:
@@ -82,25 +82,23 @@ def check_user_exist(user_id: int) -> bool:
         return user is not None
 
 
-def check_name(user_id: int) -> bool:
+def check_user_prop(user_id: int, _type: str) -> bool:
     with Session() as session:
         user: UserORM = session.query(UserORM).filter_by(telegram_id=user_id).first()
-        return user.name is not None
+        return user.__dict__[_type] is not None
+
+
+def check_name(user_id: int) -> bool:
+    return check_user_prop(user_id, 'name')
 
 
 def check_ea_id(user_id: int) -> bool:
-    with Session() as session:
-        user: UserORM = session.query(UserORM).filter_by(telegram_id=user_id).first()
-        return user.ea_id is not None
+    return check_user_prop(user_id, 'ea_id')
 
 
 def check_platform(user_id: int) -> bool:
-    with Session() as session:
-        user: UserORM = session.query(UserORM).filter_by(telegram_id=user_id).first()
-        return user.platform is not None
+    return check_user_prop(user_id, 'platform')
 
 
 def check_telegram_username(user_id: int) -> bool:
-    with Session() as session:
-        user: UserORM = session.query(UserORM).filter_by(telegram_id=user_id).first()
-        return user.telegram_username is not None
+    return check_user_prop(user_id, 'telegram_username')

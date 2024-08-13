@@ -1,5 +1,5 @@
 from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_information, confirm_callback_edit, \
-    EMPTY_INVITE, get_user_id_by_invoice, confirm_information, set_telegram_id_by_user_id, set_policy
+    EMPTY_INVITE, get_user_id_by_invoice, set_telegram_id_by_user_id, set_policy
 
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'
 bot = TeleBot(TOKEN)

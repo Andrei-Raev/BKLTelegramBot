@@ -117,8 +117,8 @@ def confirm_callback_edit(call: CallbackQuery, bot: TeleBot) -> None:
                      InlineKeyboardButton(text="📝 Изменить", callback_data="confirm:edit"))
         bot.edit_message_text(render_confirm_information(user_id=call.from_user.id), call.from_user.id,
                               call.message.message_id, parse_mode="MarkdownV2", reply_markup=keyboard)
-        bot.register_callback_query_handler(confirm_callback, lambda call: call.data.startswith(
-            "confirm:") and call.from_user.id == call.message.chat.id, pass_bot=True)
+        bot.register_callback_query_handler(confirm_callback, lambda inner_call: inner_call.data.startswith(
+            "confirm:") and inner_call.from_user.id == inner_call.message.chat.id, pass_bot=True)
     elif call.data == "confirm:edit:name":
         bot.edit_message_text(render_confirm_information(user_id=call.from_user.id), call.from_user.id,
                               call.message.message_id, parse_mode="MarkdownV2")
