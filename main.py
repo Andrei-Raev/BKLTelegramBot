@@ -18,8 +18,8 @@ def start(message):
             try:
                 set_telegram_id_by_user_id(user_id, message.chat.id)
                 # set_policy(message.chat.id)
-            except pymysql.err.IntegrityError:
-                pass
+            except EMPTY_INVITE:
+                bot.send_message(message.chat.id, "Вы уже зарегистрированы", parse_mode="MarkdownV2")
             ask_missing_information(message, bot)
             return
 
