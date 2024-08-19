@@ -15,11 +15,8 @@ def start(message):
 
         user_id = get_user_id_by_invoice(invoice)
         if user_id is not None:
-            try:
-                set_telegram_id_by_user_id(user_id, message.chat.id)
-                # set_policy(message.chat.id)
-            except EMPTY_INVITE:
-                bot.send_message(message.chat.id, "Вы уже зарегистрированы", parse_mode="MarkdownV2")
+            set_telegram_id_by_user_id(user_id, message.chat.id)
+
             ask_missing_information(message, bot)
             return
 

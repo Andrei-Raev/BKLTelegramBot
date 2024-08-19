@@ -15,6 +15,9 @@ def add_user_if_not_exist(user_id: int) -> bool:
 
 def set_telegram_id_by_user_id(user_id: int, telegram_id: int) -> None:
     with Session() as session:
+        if get_user_info(user_id) is not None:
+            return
+
         user: UserORM = session.query(UserORM).filter_by(id=user_id).first()
         user.telegram_id = telegram_id
         session.commit()
