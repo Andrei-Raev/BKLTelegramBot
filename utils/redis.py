@@ -11,7 +11,7 @@ def support_mode(_id: int) -> bool:
 
 def get_user_id_by_invoice(invoice: str) -> int:
     user_id = int(redis.get(f'invoice:{invoice}'))
-    # redis.delete(f'invoice:{invoice}')
+    redis.delete(f'invoice:{invoice}')
     return user_id
 
 
