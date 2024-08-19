@@ -1,3 +1,5 @@
+import pymysql
+
 from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_information, confirm_callback_edit, \
     EMPTY_INVITE, get_user_id_by_invoice, set_telegram_id_by_user_id, set_policy
 
@@ -13,8 +15,11 @@ def start(message):
 
         user_id = get_user_id_by_invoice(invoice)
         if user_id is not None:
-            set_telegram_id_by_user_id(user_id, message.chat.id)
-            set_policy(message.chat.id)
+            try:
+                set_telegram_id_by_user_id(user_id, message.chat.id)
+                # set_policy(message.chat.id)
+            except pymysql.err.IntegrityError:
+                pass
             ask_missing_information(message, bot)
             return
 
