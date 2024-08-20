@@ -11,7 +11,7 @@ from utils.redis import *
 
 def ask_missing_information(message: Message, bot: TeleBot) -> bool:
     user_id = message.chat.id
-    if is_registrated(user_id):
+    if is_registered(user_id):
         bot.send_message(message.chat.id, SUCCESS_REGISTRATION, message_effect_id='5046509860389126442',
                          parse_mode="MarkdownV2")
         return True
@@ -137,7 +137,7 @@ def confirm_callback(call: CallbackQuery, bot: TeleBot) -> None:
     if call.data == "confirm:yes":
         bot.edit_message_text(render_confirm_information(user_id=call.message.chat.id) + CONFIRM_ACCEPT,
                               call.from_user.id, call.message.message_id, parse_mode="MarkdownV2")
-        set_registrated(call.from_user.id)
+        set_registered(call.from_user.id)
         ask_missing_information(call.message, bot)
     elif call.data == "confirm:edit":
         keyboard = InlineKeyboardMarkup()

@@ -28,3 +28,10 @@ DENY_POLICY = ("\n\nВы *отказались от политики*\n"
 
 USER_INFO = "Ваши данные:\n        Telegram: *@{}*\n        Имя: *{}*\n        Платформа: *{}*\n        EA ID: *{}*"
 CONFIRM_ACCEPT = "\n\n✅"
+
+ENABLE_SUPPORT = escape_markdown(
+    "Вы перешли в режим поддержки. Для отключения режима поддержки и продолжения работы нажмите соответствующую кнопку.")
+
+DISABLE_SUPPORT = escape_markdown("Вы отключили режим поддержки. Для включения введите /support.")
+
+SEND_SUPPORT = escape_markdown("Сообщение отправлено в службу поддержки")

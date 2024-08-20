@@ -2,11 +2,7 @@ from redis5 import StrictRedis
 
 HOST = '31.128.44.113'
 PORT = 6379
-redis = StrictRedis(host=HOST, port=PORT, db=0)
-
-
-def support_mode(_id: int) -> bool:
-    return bool(redis.get(f'sm:{_id}'))
+redis = StrictRedis(host=HOST, port=PORT, db=0, password='px9TWv5uQI&2')
 
 
 def get_user_id_by_invoice(invoice: str) -> int:
@@ -15,20 +11,20 @@ def get_user_id_by_invoice(invoice: str) -> int:
     return user_id
 
 
-def set_registrated(user_id: int) -> None:
-    redis.hset(str(user_id), "registrated", str(1))
+def set_registered(user_id: int) -> None:
+    redis.hset(str(user_id), "registered", str(1))
 
 
-def is_registrated(user_id: int) -> bool:
-    return bool(redis.hget(str(user_id), "registrated"))
+def is_registered(user_id: int) -> bool:
+    return bool(redis.hget(str(user_id), "registered"))
 
 
-def clear_registrated(user_id: int) -> None:
-    redis.hdel(str(user_id), ["registrated"]) # TODO проверить
+def clear_registered(user_id: int) -> None:
+    redis.hdel(str(user_id), "registered")
 
 
 def set_policy(user_id: int) -> None:
-    redis.hset(str(user_id), "policy", str(1))
+    redis.hset(str(user_id), "policy", "1")
 
 
 def get_policy(user_id: int) -> bool:
@@ -36,7 +32,7 @@ def get_policy(user_id: int) -> bool:
 
 
 def clear_policy(user_id: int) -> None:
-    redis.hdel(str(user_id), ["policy"])
+    redis.hdel(str(user_id), "policy")
 
 
 def get_temp_ea_cookie() -> str:
@@ -46,3 +42,18 @@ def get_temp_ea_cookie() -> str:
 
 def set_temp_ea_cookie(cookie: str) -> None:
     redis.set("ea_cookie", cookie)
+
+
+def set_support_mode(user_id: int, mode: bool = True) -> None:
+    if mode:
+        redis.hset(str(user_id), "sm", "1")
+    else:
+        redis.hdel(str(user_id), "sm")
+
+
+def get_support_mode(user_id: int) -> bool:
+    return bool(redis.hget(str(user_id), "sm"))
+
+
+def clear_support_mode(user_id: int) -> None:
+    redis.hdel(str(user_id), "sm")
