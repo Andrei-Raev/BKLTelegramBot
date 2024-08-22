@@ -12,7 +12,7 @@ from utils.redis import *
 from utils.support_mode import send_init_support_mode, send_message_support_mode, send_info_message_into_admin_chat, \
     add_message_to_support_log, support_chat, get_support_log_text, month_genitive
 
-TOKEN = '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
+TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'
 # '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'  тест
 # '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'  прод
 bot = TeleBot(TOKEN)
@@ -63,7 +63,9 @@ def disable_support_mode(call):
     bot.edit_message_text(DISABLE_SUPPORT, call.message.chat.id, call.message.message_id, parse_mode="MarkdownV2")
 
 
-@bot.message_handler(func=lambda message: get_support_mode(message.chat.id), content_types=['*', 'sticker'])
+@bot.message_handler(func=lambda message: get_support_mode(message.chat.id),
+                     content_types=['*', 'sticker', 'photo', 'audio', 'video', 'video_note', 'voice', 'location',
+                                    'contact', 'text'])
 def pass_to_support(message):
     res = add_message_to_support_log(message)
     if not res:
@@ -88,8 +90,7 @@ def support_log(message):
         bot.send_message(support_chat, "Введите команду в виде:\n`/log user_tg_id`", parse_mode="MarkdownV2")
 
 
-@bot.message_handler(func=lambda message: message.reply_to_message is not None and message.chat.id == support_chat,
-                     content_types=['*', 'sticker'])
+@bot.message_handler(func=lambda message: message.reply_to_message is not None and message.chat.id == support_chat)
 def support_reply(message: Message):
     if message.content_type == 'text':
         tg_id = (lambda m: m.group(1) if m else None)(re.search(r"id: (\d+)\)", message.reply_to_message.text))

@@ -64,7 +64,7 @@ def add_message_to_support_log(message: Message, tg_id: int = None) -> bool:
             return False
         create_empty_support_log_if_not_exist(get_id_by_telegram_id(message.chat.id))
     user_name = message.from_user.username if message.from_user.username is not None else 'unknown'
-    add_text_to_support_log(get_id_by_telegram_id(message.chat.id) if not tg_id else tg_id,
+    add_text_to_support_log(get_id_by_telegram_id(message.chat.id) if not tg_id else get_id_by_telegram_id(tg_id),
                             '[@' + user_name + ']: ' + str(message.text))
     return True
 

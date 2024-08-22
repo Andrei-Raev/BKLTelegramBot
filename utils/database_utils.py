@@ -152,6 +152,6 @@ def add_text_to_support_log(user_id: int, text: str) -> None:
     text += '\n' if text[-1] != '\n' else ''
 
     with Session() as session:
-        support_log: SupportLogORM = session.query(SupportLogORM).filter_by(user_id=user_id).first()
+        support_log: SupportLogORM = session.query(SupportLogORM).filter_by(user_id=int(user_id)).first()
         support_log.message += text
         session.commit()
