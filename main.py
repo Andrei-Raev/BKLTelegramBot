@@ -17,7 +17,7 @@ TOKEN = '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
 # '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'  прод
 bot = TeleBot(TOKEN)
 # locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
-locale.setlocale(locale.LC_TIME, 'ru_RU')
+# locale.setlocale(locale.LC_TIME, 'ru_RU')
 
 
 @bot.message_handler(commands=['start'])
