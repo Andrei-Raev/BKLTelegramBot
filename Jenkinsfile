@@ -14,7 +14,7 @@ pipeline {
         SSH_KEY = 'ssh_BKLTelegramBot'
 
         TELEGRAM_TOKEN = '7356967548:AAFhqu3_sS19K3N46pMa57p13ZknYskbowk'
-        TELEGRAM_CHAT_ID = -4578482154
+        TELEGRAM_CHAT_ID = '-4578482154'
     }
 
     stages {

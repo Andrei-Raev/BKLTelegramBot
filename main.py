@@ -12,7 +12,7 @@ from utils.redis import *
 from utils.support_mode import send_init_support_mode, send_message_support_mode, send_info_message_into_admin_chat, \
     add_message_to_support_log, support_chat, get_support_log_text, month_genitive
 
-TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'
+TOKEN = '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
 # '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'  тест
 # '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'  прод
 bot = TeleBot(TOKEN)
