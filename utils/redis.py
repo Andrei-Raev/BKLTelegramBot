@@ -20,7 +20,7 @@ def is_registered(user_id: int) -> bool:
 
 
 def clear_registered(user_id: int) -> None:
-    redis.hdel(str(user_id), "registered")
+    redis.hdel(str(user_id), "registered")  # Неверная типизация библиотеки
 
 
 def set_policy(user_id: int) -> None:
@@ -32,7 +32,7 @@ def get_policy(user_id: int) -> bool:
 
 
 def clear_policy(user_id: int) -> None:
-    redis.hdel(str(user_id), "policy")
+    redis.hdel(str(user_id), "policy")  # Неверная типизация библиотеки
 
 
 def get_temp_ea_cookie() -> str:
@@ -48,7 +48,7 @@ def set_support_mode(user_id: int, mode: bool = True) -> None:
     if mode:
         redis.hset(str(user_id), "sm", "1")
     else:
-        redis.hdel(str(user_id), "sm")
+        redis.hdel(str(user_id), "sm")  # Неверная типизация библиотеки
 
 
 def get_support_mode(user_id: int) -> bool:
@@ -56,4 +56,18 @@ def get_support_mode(user_id: int) -> bool:
 
 
 def clear_support_mode(user_id: int) -> None:
-    redis.hdel(str(user_id), "sm")
+    redis.hdel(str(user_id), "sm")  # Неверная типизация библиотеки
+
+
+def get_next_emoji() -> str:
+    if not redis.exists("emoji_id"):
+        redis.set("emoji_id", 0)
+
+    emoji_id = int(redis.get("emoji_id"))
+    redis.incr("emoji_id")
+
+    with open("utils/emoji.txt", "r", encoding="utf-8") as f:
+        emoji_list = list(f.read())
+
+    emoji = emoji_list[emoji_id % len(emoji_list)]
+    return str(emoji)

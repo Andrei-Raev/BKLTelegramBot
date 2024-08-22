@@ -35,3 +35,7 @@ ENABLE_SUPPORT = escape_markdown(
 DISABLE_SUPPORT = escape_markdown("Вы отключили режим поддержки. Для включения введите /support.")
 
 SEND_SUPPORT = escape_markdown("Сообщение отправлено в службу поддержки")
+
+FAIL_SUPPORT_NOT_REGISTER = escape_markdown("Вы не зарегистрированы. Для регистрации введите /start")
+
+ADMINS_ANSWER_PREFIX = '_Ответ от Администрации на ваш запрос:_\n\n'

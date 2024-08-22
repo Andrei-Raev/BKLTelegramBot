@@ -95,7 +95,7 @@ def policy_callback(call: CallbackQuery, bot: TeleBot) -> None:
 
 # --== {ПОДТВЕРЖДЕНИЕ ИНФОРМАЦИИ} ==--
 def render_confirm_information(user_id: int) -> str:
-    user: UserORM = get_user_info(user_id)
+    user: UserORM = get_user_info_by_telegram_id(user_id)
     return USER_INFO.format(escape_markdown(user.telegram_username), escape_markdown(user.name),
                             escape_markdown(get_platform_by_id(user.platform).name), escape_markdown(user.ea_id))
 

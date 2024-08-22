@@ -23,3 +23,12 @@ class UserORM(Base):
     telegram_username = Column(String(255))
     platform = Column(Integer, ForeignKey('platforms.id'))
     ea_id = Column(String(255), unique=True)
+
+
+class SupportLogORM(Base):
+    __tablename__ = 'support_log'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    emoji = Column(String(5, 'utf8mb4_bin'))
+    message = Column(String(16384, 'utf8mb4_bin'))
