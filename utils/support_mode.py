@@ -73,3 +73,13 @@ def get_support_log_text(telegram_id: int) -> str:
     support_log = get_support_log(get_id_by_telegram_id(telegram_id))
     user = get_user_id_by_id(support_log.user_id)
     return f'📨 Сообщение от пользователя {user.name} (@{user.telegram_username}):\n\n' + support_log.message
+
+
+def send_users_status(chat_id: int, bot: TeleBot) -> None:
+    users = get_all_users()
+    msg = '👥 Статистика пользователей \\(всего: *' + str(len(users)) + '*\\)\n\n' + '*Список:*\n'
+    for user in users:
+        msg += '    \\- ' + escape_markdown(str(user.name)) + ' \\(@' + escape_markdown(
+            str(user.telegram_username)) + ' ea\\_id: `' + escape_markdown(str(user.ea_id)) + '`\\)\n'
+
+    bot.send_message(chat_id, msg, parse_mode="MarkdownV2")

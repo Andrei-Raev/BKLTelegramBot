@@ -34,6 +34,8 @@ def get_user_info_by_telegram_id(user_id: int) -> UserORM:
     with Session() as session:
         user: UserORM = session.query(UserORM).filter_by(telegram_id=user_id).first()
         return user
+
+
 def get_platform_by_id(platform_id: int) -> PlatformORM:
     with Session() as session:
         platform: PlatformORM = session.query(PlatformORM).filter_by(id=platform_id).first()
@@ -155,3 +157,9 @@ def add_text_to_support_log(user_id: int, text: str) -> None:
         support_log: SupportLogORM = session.query(SupportLogORM).filter_by(user_id=int(user_id)).first()
         support_log.message += text
         session.commit()
+
+
+def get_all_users() -> list:
+    with Session() as session:
+        users: list[UserORM] = session.query(UserORM).all()
+        return users

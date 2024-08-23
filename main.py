@@ -10,14 +10,18 @@ from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_inf
     EMPTY_INVITE, get_user_id_by_invoice, set_telegram_id_by_telegram_id, ENABLE_SUPPORT
 from utils.redis import *
 from utils.support_mode import send_init_support_mode, send_message_support_mode, send_info_message_into_admin_chat, \
-    add_message_to_support_log, support_chat, get_support_log_text, month_genitive
+    add_message_to_support_log, support_chat, get_support_log_text, month_genitive, send_users_status
 
-TOKEN = '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
+TEST = False
+TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes' if TEST else '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
 # '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes'  тест
 # '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'  прод
 bot = TeleBot(TOKEN)
-# locale.setlocale(locale.LC_TIME, 'ru_RU.UTF-8')
-# locale.setlocale(locale.LC_TIME, 'ru_RU')
+
+common_users_ids = [
+    support_chat,
+    780828132
+]
 
 
 @bot.message_handler(commands=['start'])
@@ -73,6 +77,11 @@ def pass_to_support(message):
         return
     send_info_message_into_admin_chat(message, bot)
     send_message_support_mode(message, bot)
+
+
+@bot.message_handler(func=lambda message: message.chat.id in common_users_ids, commands=['status'])
+def support_status(message):
+    send_users_status(message.chat.id, bot)
 
 
 @bot.message_handler(func=lambda message: message.chat.id == support_chat, commands=['log'])
