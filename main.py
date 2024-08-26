@@ -10,7 +10,7 @@ from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_inf
     EMPTY_INVITE, get_user_id_by_invoice, set_telegram_id_by_telegram_id, ENABLE_SUPPORT
 from utils.redis import *
 from utils.support_mode import send_init_support_mode, send_message_support_mode, send_info_message_into_admin_chat, \
-    add_message_to_support_log, support_chat, get_support_log_text, month_genitive, send_users_status
+    add_message_to_support_log, support_chat, get_support_log_text, month_genitive, send_users_status, broadcast
 
 TEST = False
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes' if TEST else '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
@@ -133,6 +133,10 @@ def support_reply(message: Message):
         bot.send_message(message.chat.id, "*Ответом может быть только текстовое сообщение\\!*",
                          parse_mode="MarkdownV2")
 
+
+@bot.message_handler(func=lambda message: message.chat.id == support_chat, commands=['broadcast'])
+def support_broadcast(message):
+    broadcast(bot, message)
 
 # print('--- --- ---')
 # print(message.reply_to_message.text)

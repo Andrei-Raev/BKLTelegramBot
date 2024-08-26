@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 engine = create_engine('mysql+pymysql://XPEvent:px9TWv5uQI&2@copenakum.beget.app:3306/XPEvent', pool_pre_ping=True,
@@ -32,3 +32,12 @@ class SupportLogORM(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     emoji = Column(String(5, 'utf8mb4_bin'))
     message = Column(String(16384, 'utf8mb4_bin'))
+
+
+class NotificationORM(Base):
+    __tablename__ = 'notifications'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    message = Column(String(255))
+    date = Column(DateTime)

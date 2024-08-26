@@ -83,3 +83,36 @@ def send_users_status(chat_id: int, bot: TeleBot) -> None:
             str(user.telegram_username)) + ' ea\\_id: `' + escape_markdown(str(user.ea_id)) + '`\\)\n'
 
     bot.send_message(chat_id, msg, parse_mode="MarkdownV2")
+
+
+def broadcast(bot: TeleBot, message: Message) -> None:
+    users = get_all_users()
+    bot.send_message(support_chat,
+                     f'Введите сообщение, которое будет отправлено всем пользователям: {len(users)}\nДля отмены впишите "Отмена"')
+
+    bot.register_next_step_handler_by_chat_id(message.chat.id, broadcast_send, bot, message.from_user.id)
+
+
+def broadcast_send(message: Message, bot: TeleBot, user_id: int) -> None:
+    if message.from_user.id != user_id:
+        bot.send_message(message.chat.id, "Вы не можете это сделать", parse_mode="MarkdownV2")
+        bot.register_next_step_handler_by_chat_id(message.chat.id, broadcast_send, bot, user_id)
+        return
+
+    if message.text is None:
+        bot.send_message(message.chat.id, "Вы ввели не текст", parse_mode="MarkdownV2")
+        return
+
+    message_text = bot.send_message(support_chat, 'Отправка...')
+    users = get_all_users()
+    cc = 0
+    for user in users:
+        bot.edit_message_text(f'Отправка: {cc}/{len(users)} ({round(cc / len(users) * 100, 2)}%))',
+                              message_text.chat.id, message_text.message_id)
+        try:
+            bot.send_message(user.telegram_id, message.text)
+        except Exception as e:
+            bot.send_message(support_chat, f'При отправке сообщения возникла ошибка: {e}')
+        cc += 1
+
+    bot.edit_message_text('Отправка завершена', message_text.chat.id, message_text.message_id)
