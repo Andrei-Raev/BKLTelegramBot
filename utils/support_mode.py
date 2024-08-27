@@ -110,9 +110,13 @@ def broadcast_send(message: Message, bot: TeleBot, user_id: int) -> None:
 
     message_text = bot.send_message(support_chat, 'Отправка...')
     users = get_all_users()
-    cc = 0
+    cc = -1
     for user in users:
-        if not randint(0, 4):
+        cc += 1
+        if cc < 74:
+            continue
+
+        if not randint(0, 8):
             try:
                 bot.edit_message_text(f'Отправка: {cc}/{len(users)} ({round(cc / len(users) * 100, 2)}%)',
                                       message_text.chat.id, message_text.message_id)
@@ -121,7 +125,10 @@ def broadcast_send(message: Message, bot: TeleBot, user_id: int) -> None:
         try:
             bot.send_message(user.telegram_id, message.text)
         except Exception as e:
-            bot.send_message(support_chat, f'При отправке сообщения возникла ошибка: {e}\ntg id: {user.telegram_id}')
-        cc += 1
+            try:
+                bot.send_message(support_chat,
+                                 f'При отправке сообщения возникла ошибка: {e}\ntg id: {user.telegram_id}')
+            except Exception:
+                pass
 
     bot.edit_message_text('Отправка завершена', message_text.chat.id, message_text.message_id)
