@@ -22,7 +22,7 @@ class UserORM(Base):
     telegram_id = Column(BigInteger, unique=True)
     telegram_username = Column(String(255))
     platform = Column(Integer, ForeignKey('platforms.id'))
-    ea_id = Column(String(255), unique=True)
+    ea_id = Column(String(255))
     in_game = Column(Boolean, default=False)
 
 

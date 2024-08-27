@@ -1,3 +1,5 @@
+from random import randint
+
 from telebot import TeleBot
 from telebot.formatting import escape_markdown
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
@@ -110,12 +112,16 @@ def broadcast_send(message: Message, bot: TeleBot, user_id: int) -> None:
     users = get_all_users()
     cc = 0
     for user in users:
-        bot.edit_message_text(f'Отправка: {cc}/{len(users)} ({round(cc / len(users) * 100, 2)}%))',
-                              message_text.chat.id, message_text.message_id)
+        if not randint(0, 4):
+            try:
+                bot.edit_message_text(f'Отправка: {cc}/{len(users)} ({round(cc / len(users) * 100, 2)}%)',
+                                      message_text.chat.id, message_text.message_id)
+            except Exception:
+                pass
         try:
             bot.send_message(user.telegram_id, message.text)
         except Exception as e:
-            bot.send_message(support_chat, f'При отправке сообщения возникла ошибка: {e}')
+            bot.send_message(support_chat, f'При отправке сообщения возникла ошибка: {e}\ntg id: {user.telegram_id}')
         cc += 1
 
     bot.edit_message_text('Отправка завершена', message_text.chat.id, message_text.message_id)
