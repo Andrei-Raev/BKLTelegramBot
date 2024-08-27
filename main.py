@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 
 from telebot.formatting import escape_markdown
-from telebot.types import Message
+from telebot.types import Message, BotCommand, BotCommandScopeChat
 
 from utils.mesage_template import DISABLE_SUPPORT, FAIL_SUPPORT_NOT_REGISTER, ADMINS_ANSWER_PREFIX
 from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_information, confirm_callback_edit, \
@@ -138,6 +138,7 @@ def support_reply(message: Message):
 def support_broadcast(message):
     broadcast(bot, message)
 
+
 # print('--- --- ---')
 # print(message.reply_to_message.text)
 # print(message.reply_to_message.from_user)
@@ -146,4 +147,17 @@ def support_broadcast(message):
 
 
 if __name__ == '__main__':
+    commands = [
+        BotCommand("start", "🔄 Запустить бота"),
+        BotCommand("support", "💬 Включить режим поддержки")
+    ]
+    bot.set_my_commands(commands)
+
+    support_chat_commands = [
+        BotCommand("status", "👥 Статистика"),
+        BotCommand("log", "📝 Журнал (после log добавь id пользователя)"),
+        BotCommand("broadcast", "📨 Рассылка")
+    ]
+    bot.set_my_commands(commands, scope=BotCommandScopeChat(support_chat))
+
     bot.infinity_polling()

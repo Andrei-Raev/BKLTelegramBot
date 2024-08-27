@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey, DateTime, Boolean
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
 engine = create_engine('mysql+pymysql://XPEvent:px9TWv5uQI&2@copenakum.beget.app:3306/XPEvent', pool_pre_ping=True,
                        pool_recycle=3600)
@@ -42,3 +42,21 @@ class NotificationORM(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     message = Column(String(255))
     date = Column(DateTime)
+
+
+class MatchORM(Base):
+    __tablename__ = 'matches'
+
+    id = Column(Integer, primary_key=True)
+    datetime = Column(DateTime)
+    player_a_id = Column(Integer, ForeignKey('users.id'))
+    player_b_id = Column(Integer, ForeignKey('users.id'))
+    score_player_a = Column(Integer)
+    score_player_b = Column(Integer)
+    round = Column(Integer)
+    match_number = Column(Integer)
+    is_completed = Column(Boolean, default=False)
+    winner_id = Column(Integer)
+
+    player_a = relationship("UserORM", foreign_keys=[player_a_id])
+    player_b = relationship("UserORM", foreign_keys=[player_b_id])
