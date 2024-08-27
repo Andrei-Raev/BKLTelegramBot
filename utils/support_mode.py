@@ -78,9 +78,12 @@ def get_support_log_text(telegram_id: int) -> str:
 def send_users_status(chat_id: int, bot: TeleBot) -> None:
     users = get_all_users()
     msg = '👥 Статистика пользователей \\(всего: *' + str(len(users)) + '*\\)\n\n' + '*Список:*\n'
-    for user in users:
+    for user in users[:50]:
         msg += '    \\- ' + escape_markdown(str(user.name)) + ' \\(@' + escape_markdown(
             str(user.telegram_username)) + ' ea\\_id: `' + escape_markdown(str(user.ea_id)) + '`\\)\n'
+
+    if len(users) > 50:
+        msg += '    \\- и еще ' + str(len(users) - 50) + ' пользователей'
 
     bot.send_message(chat_id, msg, parse_mode="MarkdownV2")
 
