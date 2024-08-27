@@ -113,9 +113,6 @@ def broadcast_send(message: Message, bot: TeleBot, user_id: int) -> None:
     cc = -1
     for user in users:
         cc += 1
-        if cc < 74:
-            continue
-
         if not randint(0, 8):
             try:
                 bot.edit_message_text(f'Отправка: {cc}/{len(users)} ({round(cc / len(users) * 100, 2)}%)',
