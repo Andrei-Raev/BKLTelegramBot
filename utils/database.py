@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 engine = create_engine('mysql+pymysql://XPEvent:px9TWv5uQI&2@copenakum.beget.app:3306/XPEvent', pool_pre_ping=True,
@@ -23,6 +23,7 @@ class UserORM(Base):
     telegram_username = Column(String(255))
     platform = Column(Integer, ForeignKey('platforms.id'))
     ea_id = Column(String(255), unique=True)
+    in_game = Column(Boolean, default=False)
 
 
 class SupportLogORM(Base):

@@ -138,6 +138,10 @@ def confirm_callback(call: CallbackQuery, bot: TeleBot) -> None:
         bot.edit_message_text(render_confirm_information(user_id=call.message.chat.id) + CONFIRM_ACCEPT,
                               call.from_user.id, call.message.message_id, parse_mode="MarkdownV2")
         set_registered(call.from_user.id)
+        with Session() as session:
+            user: UserORM = session.query(UserORM).filter_by(telegram_id=call.from_user.id).first()
+            user.in_game = True
+            session.commit()
         ask_missing_information(call.message, bot)
     elif call.data == "confirm:edit":
         keyboard = InlineKeyboardMarkup()
