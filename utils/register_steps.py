@@ -170,6 +170,9 @@ def format_and_clean_name(name):
 
 
 def is_valid_ea_id(ea_id: str) -> bool:
+    if ea_id in ['Pluchy-chortle7', 'laureate-farm7']:
+        return True
+
     tmp_cookie = get_temp_ea_cookie()
     url = 'https://signin.ea.com/p/ajax/user/checkOriginId?originId={}'.format(ea_id)
     headers = {
