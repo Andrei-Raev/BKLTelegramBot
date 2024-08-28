@@ -23,6 +23,8 @@ common_users_ids = [
     780828132
 ]
 
+validate_chat = 0
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -139,6 +141,10 @@ def support_broadcast(message):
     broadcast(bot, message)
 
 
+@bot.message_handler(commands=['get_id'])
+def get_id(message):
+    bot.send_message(message.chat.id, f'id текущего чата: `{message.chat.id}`\nid текущего юзера: `{message.from_user.id}`')
+
 # print('--- --- ---')
 # print(message.reply_to_message.text)
 # print(message.reply_to_message.from_user)
@@ -156,8 +162,14 @@ if __name__ == '__main__':
     support_chat_commands = [
         BotCommand("status", "👥 Статистика"),
         BotCommand("log", "📝 Журнал (после log добавь id пользователя)"),
-        BotCommand("broadcast", "📨 Рассылка")
+        BotCommand("broadcast", "📨 Рассылка"),
+        BotCommand("msg", "💬 Отправить сообщение (tg id)")
     ]
     bot.set_my_commands(support_chat_commands, scope=BotCommandScopeChat(chat_id=support_chat))
+
+    validate_chat_commands = [
+        BotCommand("end_match", "🏁 Завершить матч досрочно (надо ввести ea id победителя)")
+    ]
+    # bot.set_my_commands(validate_chat_commands, scope=BotCommandScopeChat(chat_id=validate_chat))
 
     bot.infinity_polling()
