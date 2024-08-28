@@ -5,13 +5,14 @@ from datetime import datetime
 from telebot.formatting import escape_markdown
 from telebot.types import Message, BotCommand, BotCommandScopeChat
 
+from utils.database_utils import end_match_early, send_val_info, validate_chat_mm
 from utils.mesage_template import DISABLE_SUPPORT, FAIL_SUPPORT_NOT_REGISTER, ADMINS_ANSWER_PREFIX
 from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_information, confirm_callback_edit, \
     EMPTY_INVITE, get_user_id_by_invoice, set_telegram_id_by_telegram_id, ENABLE_SUPPORT
 from utils.redis import *
 from utils.support_mode import send_init_support_mode, send_message_support_mode, send_info_message_into_admin_chat, \
     add_message_to_support_log, support_chat, get_support_log_text, month_genitive, send_users_status, broadcast, \
-    ask_message
+    ask_message, send_init_validate_mode, send_win_msg
 
 TEST = False
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes' if TEST else '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
@@ -24,7 +25,7 @@ common_users_ids = [
     780828132
 ]
 
-validate_chat = -4563837626
+validate_chat = -1002223147233
 
 
 @bot.message_handler(commands=['start'])
@@ -58,6 +59,7 @@ def confirm_callback_edit_wrapper(call):
 def support(message):
     user_id = message.chat.id
     set_support_mode(user_id)
+    clear_validate_mode(user_id)
 
     send_init_support_mode(user_id, bot)
 
@@ -154,6 +156,8 @@ def support_msg(message):
         bot.send_message(message.chat.id,
                          'Любое следующее сообщение, являющиеся ответом на команду /msg будет отправлено')
         bot.register_next_step_handler_by_chat_id(message.chat.id, ask_message, bot, tg_id)
+    else:
+        bot.send_message(message.chat.id, "Введите команду в виде:\n`/msg user_tg_id`", parse_mode="MarkdownV2")
 
 
 @bot.message_handler(commands=['get_id'])
@@ -168,12 +172,51 @@ def end_match(message):
     args = message.text.split(maxsplit=1)
     if len(args) > 1:
         try:
-            ea_id = int(args[1].strip())
+            ea_id = args[1].strip()
         except ValueError:
-            bot.send_message(support_chat, "Вы не ввели EA ID победителя\\!", parse_mode="MarkdownV2")
+            bot.send_message(message.chat.id, "Вы не ввели EA ID победителя\\!", parse_mode="MarkdownV2")
             return
 
+        end_match_early(bot, ea_id, message.chat.id)
+        send_win_msg(bot, ea_id)
+    else:
+        bot.send_message(message.chat.id, "Вы не ввели EA ID победителя\\!", parse_mode="MarkdownV2")
+        return
 
+
+@bot.message_handler(commands=['validate'])
+def validate(message):
+    user_id = message.chat.id
+    set_validate_mode(user_id)
+    clear_support_mode(user_id)
+
+    send_init_validate_mode(user_id, bot)
+
+
+@bot.message_handler(func=lambda message: message.chat.id == validate_chat and bool(
+    re.match(r"^\s*1\s*:\s*\d+\s*2\s*:\s*\d+\s*$", message.text)))
+def validate_vl(message: Message):
+    match_number = re.search(r"Матч (\d+):", message.reply_to_message.text).group(1)
+    match = re.search(r"1\s*:\s*(\d+)\s*2\s*:\s*(\d+)", message.text)
+    if match:
+        number1 = int(match.group(1))
+        number2 = int(match.group(2))
+
+        bot.edit_message_text(message.reply_to_message.text + '\n\n✅', message.chat.id,
+                              message.reply_to_message.message_id)
+
+        validate_chat_mm(match_number, number1, number2, bot, message.chat.id)
+
+
+@bot.message_handler(func=lambda message: get_validate_mode(message.chat.id), content_types=['photo'])
+def pass_to_validate(message):
+    clear_validate_mode(message.chat.id)
+
+    send_val_info(bot, message.chat.id, validate_chat)
+    bot.forward_message(validate_chat, message.chat.id, message.message_id)
+
+
+# send_val_info(bot, 810526171, validate_chat)
 # print('--- --- ---')
 # print(message.reply_to_message.text)
 # print(message.reply_to_message.from_user)

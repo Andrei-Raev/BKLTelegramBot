@@ -11,7 +11,7 @@ TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes' if TEST else '735325284
 # '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'  прод
 bot = TeleBot(TOKEN)
 
-a = '''Ваш матч состоится в *18:00 28\\.08*
+a = '''Ваш матч состоится в *18:30 28\\.08*
 
 🆔 EA ID соперника: `{}`
 💬 Telegram соперника: @{}
@@ -22,7 +22,7 @@ a = '''Ваш матч состоится в *18:00 28\\.08*
 
 После завершения матча вам необходимо воспользоваться командой /validate и отправить скриншот с результатами.''')
 
-FIFTEEN_MINUTES = '''Ваш матч начнётся *через 7 минут* ⌛️
+FIFTEEN_MINUTES = '''Ваш матч начнётся *через 15 минут* ⌛️
 
 🆔 EA ID соперника: `{}`
 💬 Контакты соперника: @{}
@@ -34,11 +34,15 @@ FIFTEEN_MINUTES = '''Ваш матч начнётся *через 7 минут* 
 Текстовые результаты не принимаются.''')
 
 from utils.database import MatchORM
-
+cc = 0
 with Session() as session:
     users_pairs = session.query(MatchORM.player_a_id, MatchORM.player_b_id).filter(
-        MatchORM.is_completed == False).filter(MatchORM.round == 6).all()
+        MatchORM.is_completed == False).filter(MatchORM.round == 5).all()
     for user1, user2 in users_pairs:
+        print(user1, user2)
+        if cc < 32:
+            cc += 1
+            continue
         user1_obj = session.query(UserORM).filter(UserORM.id == user1).first()
         user2_obj = session.query(UserORM).filter(UserORM.id == user2).first()
 
@@ -56,3 +60,4 @@ with Session() as session:
             bot.send_message(user2_obj.telegram_id, message2, parse_mode='MarkdownV2')
         except Exception as e:
             print(user2_obj.ea_id)
+        cc += 1

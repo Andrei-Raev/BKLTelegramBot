@@ -4,8 +4,11 @@ from telebot import TeleBot
 from telebot.formatting import escape_markdown
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
+from utils.database import Session, UserORM, MatchORM
+from utils.database_utils import get_user_info_by_telegram_id, get_support_log_by_telegram_id, \
+    create_empty_support_log_if_not_exist, get_id_by_telegram_id, add_text_to_support_log, get_support_log, \
+    get_user_id_by_id, get_all_users
 from utils.mesage_template import ENABLE_SUPPORT, SEND_SUPPORT
-from utils.database_utils import *
 
 support_chat = -4578482154
 month_genitive = {
@@ -44,6 +47,10 @@ def send_init_support_mode(user_id: int, bot: TeleBot) -> None:
     bot.send_message(user_id, ENABLE_SUPPORT, parse_mode="MarkdownV2", reply_markup=keyboard)
 
 
+def send_init_validate_mode(user_id: int, bot: TeleBot) -> None:
+    bot.send_message(user_id, "Теперь отправьте скриншот")
+
+
 def send_message_support_mode(message: Message, bot: TeleBot) -> None:
     keyboard = InlineKeyboardMarkup()
     keyboard.row(InlineKeyboardButton(text="Отключить", callback_data="sm:off"))
@@ -61,10 +68,30 @@ def send_info_message_into_admin_chat(message: Message, bot: TeleBot) -> None:
             str(user.telegram_username) if user.telegram_username is not None else 'unknown')
         user_telegram_id = escape_markdown(str(user.telegram_id))
         user_ea_id = escape_markdown(str(user.ea_id) if user.ea_id is not None else 'null')
+
+        try:
+            with Session() as session:
+                query = session.query(MatchORM).filter(
+                    (MatchORM.player_a_id == user.id) | (MatchORM.player_b_id == user.id)
+                ).filter(
+                    MatchORM.is_completed == False
+                )
+
+                actual_match: MatchORM = query.first()
+
+                if actual_match.player_a_id == user.id:
+                    tt = f'Оппонент: `{actual_match.player_b.ea_id}`'
+                else:
+                    tt = f'Оппонент: `{actual_match.player_a.ea_id}`'
+
+        except Exception as e:
+            tt = ''
+
         msg = f'''📨 Новое сообщение\\!
 
 👤 Пользователь: {user_name} \\(@{user_telegram}, id: `{user_telegram_id}`\\)
 🔢 EA ID: `{user_ea_id}`
+{tt}
 
 🔽 Сообщение 🔽
 '''
@@ -74,6 +101,11 @@ def send_info_message_into_admin_chat(message: Message, bot: TeleBot) -> None:
 
 
 def add_message_to_support_log(message: Message, tg_id: int = None) -> bool:
+    def check_user_exist(user_id: int) -> bool:
+        with Session() as session:
+            user: UserORM = session.query(UserORM).filter_by(telegram_id=user_id).first()
+            return user is not None
+
     if message.chat.type == 'private':
         if not check_user_exist(message.chat.id):
             return False
@@ -142,3 +174,12 @@ def broadcast_send(message: Message, bot: TeleBot, user_id: int) -> None:
                 pass
 
     bot.edit_message_text('Отправка завершена', message_text.chat.id, message_text.message_id)
+
+
+def send_win_msg(bot: TeleBot, user_ea_id: str) -> None:
+    with Session() as session:
+        user: UserORM = session.query(UserORM).filter_by(ea_id=user_ea_id).first()
+        try:
+            bot.send_message(user.telegram_id, f'Поздравляем с победой!', message_effect_id='5046509860389126442')
+        except Exception:
+            pass

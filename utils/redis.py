@@ -86,3 +86,7 @@ def get_next_emoji() -> str:
 
     emoji = emoji_list[emoji_id % len(emoji_list)]
     return str(emoji)
+
+
+def clear_tournament() -> None:
+    redis.delete('tournament')
