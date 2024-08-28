@@ -158,6 +158,6 @@ if __name__ == '__main__':
         BotCommand("log", "📝 Журнал (после log добавь id пользователя)"),
         BotCommand("broadcast", "📨 Рассылка")
     ]
-    bot.set_my_commands(commands, scope=BotCommandScopeChat(support_chat))
+    bot.set_my_commands(support_chat_commands, scope=BotCommandScopeChat(chat_id=support_chat))
 
     bot.infinity_polling()
