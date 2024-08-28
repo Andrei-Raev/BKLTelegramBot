@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import create_engine, Column, Integer, String, BigInteger, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
@@ -60,3 +62,58 @@ class MatchORM(Base):
 
     player_a = relationship("UserORM", foreign_keys=[player_a_id])
     player_b = relationship("UserORM", foreign_keys=[player_b_id])
+
+    def __str__(self):
+        return f'Match {self.id} (N{self.match_number} T{self.round}): {self.player_a} VS {self.player_b} at {self.datetime}: {self.score_player_a}/{self.score_player_b}'
+
+    def __repr__(self):
+        return self.__str__()
+
+    # @staticmethod
+    # def new(session, datetime, player_a_id, player_b_id, _round, match_number, is_completed=False, winner_id=None):
+    #     match = MatchORM(
+    #         datetime=datetime,
+    #         player_a_id=player_a_id,
+    #         player_b_id=player_b_id,
+    #         round=_round,
+    #         match_number=match_number,
+    #         is_completed=is_completed,
+    #         winner_id=winner_id
+    #     )
+    #     session.add(match)
+    #     session.commit()
+    #     return match
+
+    def end_match(self, score_player_a, score_player_b):
+        self.score_player_a = int(score_player_a)
+        self.score_player_b = int(score_player_b)
+
+        if self.score_player_a > self.score_player_b:
+            self.winner_id = self.player_a_id
+        else:
+            self.winner_id = self.player_b_id
+
+        self.is_completed = True
+
+        with Session() as session:
+            session.merge(self)
+            session.commit()
+
+    @property
+    def status(self):
+        if self.player_a_id is None and self.player_b_id is None:
+            return 0
+        elif self.is_completed == 1:
+            return 4
+        elif self.player_a_id is None or self.player_b_id is None:
+            return 1
+
+        elif self.datetime:
+            if self.datetime <= datetime.now():
+                return 3
+            else:
+                return 2
+        elif self.player_a_id and self.player_b_id:
+            return 2
+        else:
+            return 5

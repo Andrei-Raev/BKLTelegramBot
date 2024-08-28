@@ -51,12 +51,27 @@ def set_support_mode(user_id: int, mode: bool = True) -> None:
         redis.hdel(str(user_id), "sm")  # Неверная типизация библиотеки
 
 
+def set_validate_mode(user_id: int, mode: bool = True) -> None:
+    if mode:
+        redis.hset(str(user_id), "vm", "1")
+    else:
+        redis.hdel(str(user_id), "vm")  # Неверная типизация библиотеки
+
+
 def get_support_mode(user_id: int) -> bool:
     return bool(redis.hget(str(user_id), "sm"))
 
 
+def get_validate_mode(user_id: int) -> bool:
+    return bool(redis.hget(str(user_id), "vm"))
+
+
 def clear_support_mode(user_id: int) -> None:
     redis.hdel(str(user_id), "sm")  # Неверная типизация библиотеки
+
+
+def clear_validate_mode(user_id: int) -> None:
+    redis.hdel(str(user_id), "vm")  # Неверная типизация библиотеки
 
 
 def get_next_emoji() -> str:

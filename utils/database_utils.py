@@ -1,4 +1,4 @@
-from utils.database import UserORM, Session, PlatformORM, SupportLogORM
+from utils.database import UserORM, Session, PlatformORM, SupportLogORM, MatchORM
 from utils.redis import get_next_emoji
 
 
@@ -163,3 +163,16 @@ def get_all_users() -> list:
     with Session() as session:
         users: list[UserORM] = session.query(UserORM).all()
         return users
+
+
+def end_match_early(ea_id: str) -> None:
+    with Session() as session:
+        user = session.query(UserORM).filter(UserORM.ea_id == ea_id).first()
+
+        query = session.query(MatchORM).filter(
+            (MatchORM.player_a_id == user.id) | (MatchORM.player_b_id == user.id)
+        ).filter(
+            MatchORM.is_completed == False
+        )
+
+        actual_match: MatchORM = query.first()

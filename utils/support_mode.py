@@ -25,11 +25,16 @@ month_genitive = {
 
 
 def ask_message(message: Message, bot: TeleBot, user_id: int) -> None:
-    if message.reply_to_message.text in ['/msg', '/msg@' + bot.get_me().username,
+    print(message)
+    print(user_id)
+    if message.reply_to_message.text in [f'/msg {user_id}', '/msg@' + bot.get_me().username + f' {user_id}',
                                          'Любое следующее сообщение, являющиеся ответом на команду /msg будет отправлено']:
         bot.send_message(user_id, message.text)
+
+        bot.send_message(message.chat.id, "Сообщение доставлено.")
     else:
-        bot.register_next_step_handler_by_chat_id(message.chat.id, ask_message, bot, user_id)
+        bot.send_message(message.chat.id, "Ошибка отправки сообщения. Повторите попытку.")
+        # bot.register_next_step_handler_by_chat_id(message.chat.id, ask_message, bot, user_id)
 
 
 def send_init_support_mode(user_id: int, bot: TeleBot) -> None:
