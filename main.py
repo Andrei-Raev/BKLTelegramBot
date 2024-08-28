@@ -10,7 +10,8 @@ from utils.register_steps import TeleBot, add_user_if_not_exist, ask_missing_inf
     EMPTY_INVITE, get_user_id_by_invoice, set_telegram_id_by_telegram_id, ENABLE_SUPPORT
 from utils.redis import *
 from utils.support_mode import send_init_support_mode, send_message_support_mode, send_info_message_into_admin_chat, \
-    add_message_to_support_log, support_chat, get_support_log_text, month_genitive, send_users_status, broadcast
+    add_message_to_support_log, support_chat, get_support_log_text, month_genitive, send_users_status, broadcast, \
+    ask_message
 
 TEST = False
 TOKEN = '6237067477:AAGzV5LFC_UH9Brp22-TwUvXNsciDK7Nkes' if TEST else '7353252847:AAFUtaMO5pKvJd8katYrDpNHim5J-eJuahs'
@@ -23,7 +24,7 @@ common_users_ids = [
     780828132
 ]
 
-validate_chat = 0
+validate_chat = -4563837626
 
 
 @bot.message_handler(commands=['start'])
@@ -141,9 +142,26 @@ def support_broadcast(message):
     broadcast(bot, message)
 
 
+@bot.message_handler(func=lambda message: message.chat.id == support_chat, commands=['msg'])
+def support_msg(message):
+    args = message.text.split(maxsplit=1)
+    if len(args) > 1:
+        try:
+            tg_id = int(args[1].strip())
+        except ValueError:
+            bot.send_message(support_chat, "Неверный формат ID пользователя\\!", parse_mode="MarkdownV2")
+            return
+        bot.send_message(support_chat,
+                         'Любое следующее сообщение, являющиеся ответом на команду `/msg` будет отправлено')
+        bot.register_next_step_handler_by_chat_id(message.chat.id, ask_message, bot, tg_id)
+
+
 @bot.message_handler(commands=['get_id'])
 def get_id(message):
-    bot.send_message(message.chat.id, f'id текущего чата: `{message.chat.id}`\nid текущего юзера: `{message.from_user.id}`')
+    bot.send_message(message.chat.id,
+                     f'id текущего чата: `{message.chat.id}`\nid текущего юзера: `{message.from_user.id}`',
+                     parse_mode="MarkdownV2")
+
 
 # print('--- --- ---')
 # print(message.reply_to_message.text)
@@ -170,6 +188,6 @@ if __name__ == '__main__':
     validate_chat_commands = [
         BotCommand("end_match", "🏁 Завершить матч досрочно (надо ввести ea id победителя)")
     ]
-    # bot.set_my_commands(validate_chat_commands, scope=BotCommandScopeChat(chat_id=validate_chat))
+    bot.set_my_commands(validate_chat_commands, scope=BotCommandScopeChat(chat_id=validate_chat))
 
     bot.infinity_polling()

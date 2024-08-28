@@ -24,6 +24,14 @@ month_genitive = {
 }
 
 
+def ask_message(message: Message, bot: TeleBot, user_id: int) -> None:
+    if message.reply_to_message.text in ['/msg', '/msg@' + bot.get_me().username,
+                                         'Любое следующее сообщение, являющиеся ответом на команду /msg будет отправлено']:
+        bot.send_message(user_id, message.text)
+    else:
+        bot.register_next_step_handler_by_chat_id(message.chat.id, ask_message, bot, user_id)
+
+
 def send_init_support_mode(user_id: int, bot: TeleBot) -> None:
     keyboard = InlineKeyboardMarkup()
     keyboard.row(InlineKeyboardButton(text="Отключить", callback_data="sm:off"))
