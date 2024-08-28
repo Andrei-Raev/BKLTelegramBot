@@ -21,8 +21,8 @@ a = '''Ваш матч состоится в *18:30 28\\.08*
 Пожалуйста, убедитесь, что сможете принять участие. В противном случае, свяжитесь с /support.
 
 После завершения матча вам необходимо воспользоваться командой /validate и отправить скриншот с результатами.''')
-
-FIFTEEN_MINUTES = '''Ваш матч начнётся *через 15 минут* ⌛️
+# Ваш матч начнётся *через 15 минут* ⌛️
+FIFTEEN_MINUTES = '''*Обновленная информация о сопернике*
 
 🆔 EA ID соперника: `{}`
 💬 Контакты соперника: @{}
@@ -37,12 +37,11 @@ from utils.database import MatchORM
 cc = 0
 with Session() as session:
     users_pairs = session.query(MatchORM.player_a_id, MatchORM.player_b_id).filter(
-        MatchORM.is_completed == False).filter(MatchORM.round == 5).all()
+        MatchORM.is_completed == False).filter(MatchORM.round == 4).all()
+
+    users_pairs = [[106, 109]]
     for user1, user2 in users_pairs:
         print(user1, user2)
-        if cc < 32:
-            cc += 1
-            continue
         user1_obj = session.query(UserORM).filter(UserORM.id == user1).first()
         user2_obj = session.query(UserORM).filter(UserORM.id == user2).first()
 

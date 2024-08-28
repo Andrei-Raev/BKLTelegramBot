@@ -9,6 +9,7 @@ from utils.database_utils import get_user_info_by_telegram_id, get_support_log_b
     create_empty_support_log_if_not_exist, get_id_by_telegram_id, add_text_to_support_log, get_support_log, \
     get_user_id_by_id, get_all_users
 from utils.mesage_template import ENABLE_SUPPORT, SEND_SUPPORT
+from utils.redis import set_support_mode
 
 support_chat = -4578482154
 month_genitive = {
@@ -35,6 +36,7 @@ def ask_message(message: Message, bot: TeleBot, user_id: int) -> None:
         bot.send_message(user_id, message.text)
 
         bot.send_message(message.chat.id, "Сообщение доставлено.")
+        set_support_mode(user_id)
     else:
         bot.send_message(message.chat.id, "Ошибка отправки сообщения. Повторите попытку.")
         # bot.register_next_step_handler_by_chat_id(message.chat.id, ask_message, bot, user_id)
